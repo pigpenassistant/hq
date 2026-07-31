@@ -319,6 +319,8 @@
       return;
     }
     openMail('Dump: ' + t.slice(0,60), t, 'dumpflash');
+    document.getElementById('dumpbox').value = '';
+    finalText = '';
   }
 
   function shareDay(){
