@@ -216,7 +216,7 @@
   </div>
 </section>
 
-<footer>Pigpen HQ v5 · checks reset on reload — Sync makes them permanent</footer>
+<footer>Pigpen v6 · checks stick on this device — Sync tells Pigpen so the list itself updates</footer>
 
 <div id="syncbar">
   <span id="pending">Nothing pending</span>
@@ -226,6 +226,30 @@
 
 <script>
   function toggle(h2){ h2.parentElement.classList.toggle('folded'); }
+
+  // ---- checks stick on this device (safe no-op where storage is unavailable) ----
+  var KP = 'pigpen-check:';
+  function saveCheck(el){
+    try {
+      var k = KP + el.getAttribute('data-item');
+      if (el.classList.contains('checked')) localStorage.setItem(k, '1');
+      else localStorage.removeItem(k);
+    } catch(e){}
+  }
+  function restoreChecks(){
+    try {
+      var live = {};
+      document.querySelectorAll('[data-item]').forEach(function(el){
+        var k = KP + el.getAttribute('data-item');
+        live[k] = true;
+        if (localStorage.getItem(k)) el.classList.add('checked');
+      });
+      for (var i = localStorage.length - 1; i >= 0; i--){
+        var key = localStorage.key(i);
+        if (key && key.indexOf(KP) === 0 && !live[key]) localStorage.removeItem(key);
+      }
+    } catch(e){}
+  }
 
   function updateCounts(){
     document.querySelectorAll('section[data-name]').forEach(function(sec){
@@ -251,6 +275,9 @@
       } else {
         el.classList.toggle('checked');
       }
+      if (el.classList.contains('ans')) {
+        document.querySelectorAll('.ans[data-q="'+el.getAttribute('data-q')+'"]').forEach(saveCheck);
+      } else saveCheck(el);
       updateCounts();
     });
   });
@@ -386,6 +413,7 @@
       msg || (document.getElementById('dumpbox').value ? 'Got it — review and hit Send. 🐷' : '');
   }
 
+  restoreChecks();
   updateCounts();
 </script>
 </body>
