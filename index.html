@@ -46,6 +46,8 @@
        display:flex; align-items:center; justify-content:center; font-size:13px; color:transparent}
   li.checked .box{background:var(--green); border-color:var(--green); color:#fff}
   li.checked .txt{color:var(--muted); text-decoration:line-through}
+  li.check.checked{opacity:.45}
+  li.gone{display:none}
   .dot{flex:0 0 auto; width:9px; height:9px; border-radius:50%; margin-top:6px}
   .r{background:var(--red)} .a{background:var(--amber)} .g{background:var(--green)} .b{background:var(--accent)}
   .sub{display:block; font-size:12.5px; color:var(--muted); text-decoration:none}
@@ -236,19 +238,28 @@
       else localStorage.removeItem(k);
     } catch(e){}
   }
+  var SP = 'pigpen-synced:';
+  function repositionDone(){
+    document.querySelectorAll('li.check.checked').forEach(function(li){
+      try { if (localStorage.getItem(SP + li.getAttribute('data-item'))) { li.classList.add('gone'); return; } } catch(e){}
+      var ul = li.parentElement;
+      if (ul && ul.lastElementChild !== li) ul.appendChild(li);
+    });
+  }
   function restoreChecks(){
     try {
       var live = {};
       document.querySelectorAll('[data-item]').forEach(function(el){
-        var k = KP + el.getAttribute('data-item');
-        live[k] = true;
-        if (localStorage.getItem(k)) el.classList.add('checked');
+        var k = el.getAttribute('data-item');
+        live[KP + k] = true; live[SP + k] = true;
+        if (localStorage.getItem(KP + k)) el.classList.add('checked');
       });
       for (var i = localStorage.length - 1; i >= 0; i--){
         var key = localStorage.key(i);
-        if (key && key.indexOf(KP) === 0 && !live[key]) localStorage.removeItem(key);
+        if (key && (key.indexOf(KP) === 0 || key.indexOf(SP) === 0) && !live[key]) localStorage.removeItem(key);
       }
     } catch(e){}
+    repositionDone();
   }
 
   function updateCounts(){
@@ -277,7 +288,7 @@
       }
       if (el.classList.contains('ans')) {
         document.querySelectorAll('.ans[data-q="'+el.getAttribute('data-q')+'"]').forEach(saveCheck);
-      } else saveCheck(el);
+      } else { saveCheck(el); repositionDone(); }
       updateCounts();
     });
   });
@@ -337,6 +348,8 @@
     if(s.done.length)    body += '\nDONE:\n- ' + s.done.join('\n- ') + '\n';
     body += '\nSTILL OPEN:\n- ' + (s.open.length? s.open.join('\n- ') : '(nothing)');
     openMail('Dump: HQ sync', body, 'syncflash');
+    try { s.done.forEach(function(it){ localStorage.setItem(SP + it, '1'); }); } catch(e){}
+    setTimeout(repositionDone, 400);
   }
 
   function sendDump(){
