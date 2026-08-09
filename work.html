@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>Pigpen Work</title>
+<meta name="apple-mobile-web-app-title" content="Pigpen Work">
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#ffffff; --ink:#26241f; --muted:#7a766c;
+    --line:#e5e1d8; --red:#b3402a; --amber:#a8730f; --green:#3d7a4a;
+    --accent:#4a5d80; --chip:#efece4; --btn:#4a5d80; --btntext:#ffffff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#1d1c19; --card:#26241f; --ink:#ece9e2; --muted:#a09b8f;
+      --line:#3a3831; --red:#e07a5f; --amber:#d9a441; --green:#7fb08a;
+      --accent:#94a8c8; --chip:#33312a; --btn:#94a8c8; --btntext:#1d1c19; }
+  }
+  *{box-sizing:border-box; margin:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg); color:var(--ink); padding:18px 18px 84px; max-width:680px; margin:0 auto; line-height:1.45;
+    -webkit-tap-highlight-color:transparent}
+  header{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px}
+  h1{font-size:22px; letter-spacing:-.02em}
+  .hbtns{display:flex; gap:8px; align-items:center}
+  .stamp{font-size:11.5px; color:var(--muted)}
+  .share{background:var(--chip); border:none; border-radius:20px; padding:6px 13px; font-size:13px;
+    color:var(--ink); cursor:pointer; font-weight:600}
+  section{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:13px 16px; margin-bottom:12px}
+  h2{font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+     display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none}
+  h2 .chev{font-size:11px; transition:transform .15s; color:var(--muted)}
+  section.folded .chev{transform:rotate(-90deg)}
+  section .body{margin-top:10px}
+  section.folded .body{display:none}
+  .count{font-size:12px; font-weight:600; color:var(--green); text-transform:none; letter-spacing:0; margin-left:auto; margin-right:8px}
+  ul{list-style:none}
+  li{padding:8px 0; border-top:1px solid var(--line); font-size:15px; display:flex; gap:10px; align-items:flex-start}
+  li:first-of-type{border-top:none}
+  li.check{cursor:pointer; user-select:none}
+  .box{flex:0 0 auto; width:19px; height:19px; border:2px solid var(--muted); border-radius:5px; margin-top:2px;
+       display:flex; align-items:center; justify-content:center; font-size:13px; color:transparent}
+  li.checked .box{background:var(--green); border-color:var(--green); color:#fff}
+  li.checked .txt{color:var(--muted); text-decoration:line-through}
+  li.check.checked{opacity:.45}
+  li.gone{display:none}
+  .dot{flex:0 0 auto; width:9px; height:9px; border-radius:50%; margin-top:6px}
+  .r{background:var(--red)} .a{background:var(--amber)} .g{background:var(--green)} .b{background:var(--accent)}
+  .sub{display:block; font-size:12.5px; color:var(--muted); text-decoration:none}
+  .day{font-weight:600; font-size:13px; color:var(--accent); margin:10px 0 2px}
+  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-top:4px}
+  .chip{background:var(--chip); border-radius:20px; padding:5px 12px; font-size:13px; color:var(--ink);
+        cursor:pointer; user-select:none; border:1.5px dashed var(--muted)}
+  .chip.static{cursor:default; border-style:solid}
+  .chip.checked{border:1.5px solid var(--green); background:transparent; color:var(--muted); text-decoration:line-through}
+  .chip.checked::before{content:"✓ "; color:var(--green)}
+  .chip.ans.checked{text-decoration:none; color:var(--ink); font-weight:600}
+  textarea{width:100%; border:1.5px solid var(--line); border-radius:10px; background:var(--bg); color:var(--ink);
+    padding:10px 12px; font-size:15px; font-family:inherit; resize:vertical; min-height:64px}
+  textarea::placeholder{color:var(--muted)}
+  .btn{display:block; width:100%; text-align:center; background:var(--btn); color:var(--btntext);
+    border:none; border-radius:10px; padding:12px; font-size:15px; font-weight:600; margin-top:10px; cursor:pointer}
+  .btnrow{display:flex; gap:8px; margin-top:10px}
+  .btnrow .btn{margin-top:0}
+  .btn.rec{background:transparent; color:var(--accent); border:1.5px solid var(--accent); flex:0 0 44%}
+  .btn.rec.live{background:var(--red); color:#fff; border-color:var(--red); animation:pulse 1.2s infinite}
+  @keyframes pulse{50%{opacity:.75}}
+  .flash{font-size:12.5px; color:var(--green); text-align:center; margin-top:6px; min-height:16px}
+  .diff{font-size:12.5px; color:var(--muted); margin-bottom:12px}
+  .diff b{color:var(--ink)}
+  footer{font-size:12px; color:var(--muted); text-align:center; padding:8px 0 10px}
+  .big{font-weight:650}
+  #syncbar{position:fixed; left:0; right:0; bottom:0; background:var(--card); border-top:1px solid var(--line);
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:center; gap:12px; max-width:680px; margin:0 auto}
+  #syncbar .btn{margin-top:0; flex:1}
+  #pending{font-size:12.5px; color:var(--muted); white-space:nowrap}
+</style>
+</head>
+<body>
+<header>
+  <h1>🐷💼 Pigpen Work</h1>
+  <div class="hbtns">
+    <a href="index.html" class="share" style="text-decoration:none">🏠 HQ</a>
+    <span class="stamp">Sun 8/9</span>
+  </div>
+</header>
+
+<p class="diff"><b>Work wing launched:</b> the pipeline lives here now — every client, deadline, and unbilled dollar-shaped hole, refreshed at every pass. Check things off and Sync like on HQ.</p>
+
+<section data-name="DueNow">
+  <h2 onclick="toggle(this)">🔴 Due now <span class="count"></span><span class="chev">▼</span></h2>
+  <div class="body">
+  <ul>
+    <li class="check" data-item="Paul I. final proof (due Tue 8/11)"><span class="box">✓</span><div class="txt"><span class="big">🔔 Paul I. — your final proof</span>, due Tue 8/11<span class="sub">Essay itself is finished ✓ — this is your deliverable; this afternoon is the proposed window</span></div></li>
+    <li class="check" data-item="Lanna brainstorm draft before Mon 6:00"><span class="box">✓</span><div class="txt"><span class="big">Lanna — brainstorm draft</span> before her Mon 6:00<span class="sub">Owed since last week</span></div></li>
+    <li class="check" data-item="VCS consent form"><span class="box">✓</span><div class="txt"><span class="big">VCS consent form</span> — they are matching tutors right now<span class="sub">Every unsigned day risks a student assigned elsewhere</span></div></li>
+    <li class="check" data-item="Cabot yogurt: confirm delivery + bill"><span class="box">✓</span><div class="txt"><span class="big">Cabot yogurt — delivered, UNBILLED</span><span class="sub">Overdue since 7/26 · confirm it reached Autumn B., then invoice · stays red until billed</span></div></li>
+  </ul>
+  </div>
+</section>
+
+<section>
+  <h2 onclick="toggle(this)">📊 Pipeline <span class="chev">▼</span></h2>
+  <div class="body">
+  <div class="day">Active — yours to move</div>
+  <ul>
+    <li><span class="dot b"></span><div>Cabot — 2026 merch copy · deadline <b>8/19 confirmed</b> ✓ · start this week · bill on delivery</div></li>
+    <li><span class="dot b"></span><div>Sara D. — shared-doc comments: emailed set done ✓, verify the 3-supplemental doc</div></li>
+    <li><span class="dot b"></span><div>Spark — post still pending</div></li>
+  </ul>
+  <div class="day">Waiting on them</div>
+  <ul>
+    <li><span class="dot a"></span><div class="sub">Seismic — close-out confirmation · WorldMed — no movement (stale ⚠) · Cabot (Autumn B.) — delivery confirmation on the yogurt rewrite</div></li>
+  </ul>
+  </div>
+</section>
+
+<section data-name="Intake">
+  <h2 onclick="toggle(this)">🌱 Intake in motion <span class="count"></span><span class="chev">▼</span></h2>
+  <div class="body">
+  <ul>
+    <li class="check" data-item="Send Susannah D. call reply (staged)"><span class="box">✓</span><div class="txt"><span class="big">Susannah D.</span> — call reply staged (offers Tue 9:30/10:00)<span class="sub">One tap in Drafts</span></div></li>
+    <li class="check" data-item="Re-read + send Anna G. reply"><span class="box">✓</span><div class="txt"><span class="big">Anna G.</span> — reply staged, re-read first<span class="sub">She switched essay direction Thu — wording shouldn't assume the old topic</span></div></li>
+    <li><span class="dot a"></span><div>Ava (Brea S.) — ready to start; quiet 2 days after your offer</div></li>
+    <li><span class="dot a"></span><div>Mason (Melissa B.) — owes you Tue/Thu answer · Susannah M. — pick Wed 6 / Thu 5 / Thu 6 (chips on HQ)</div></li>
+    <li><span class="dot g"></span><div class="sub">Kim M. — week of 8/17 · Sophia/Theo — awaiting her times</div></li>
+  </ul>
+  </div>
+</section>
+
+<section>
+  <h2 onclick="toggle(this)">📈 Load <span class="chev">▼</span></h2>
+  <div class="body">
+  <div class="chips">
+    <span class="chip static">~13 active</span>
+    <span class="chip static">4 inquiries in motion</span>
+    <span class="chip static">Mon ×4 · Tue ×5 · Wed ×3 · Thu ×2</span>
+  </div>
+  </div>
+</section>
+
+<footer>Pigpen Work v1 · part of the same system — checks stick on this device, Sync tells Pigpen</footer>
+
+<div id="syncbar">
+  <span id="pending">Nothing pending</span>
+  <button class="btn" onclick="syncState()">📤 Sync to Pigpen</button>
+</div>
+<div class="flash" id="syncflash" style="position:fixed; bottom:70px; left:0; right:0; pointer-events:none"></div>
+
+<script>
+  function toggle(h2){ h2.parentElement.classList.toggle('folded'); }
+  var KP = 'pigpen-check:', SP = 'pigpen-synced:';
+  function saveCheck(el){
+    try {
+      var k = KP + el.getAttribute('data-item');
+      if (el.classList.contains('checked')) localStorage.setItem(k, '1');
+      else localStorage.removeItem(k);
+    } catch(e){}
+  }
+  function repositionDone(){
+    document.querySelectorAll('li.check.checked').forEach(function(li){
+      try { if (localStorage.getItem(SP + li.getAttribute('data-item'))) { li.classList.add('gone'); return; } } catch(e){}
+      var ul = li.parentElement;
+      if (ul && ul.lastElementChild !== li) ul.appendChild(li);
+    });
+  }
+  function restoreChecks(){
+    try {
+      document.querySelectorAll('[data-item]').forEach(function(el){
+        if (localStorage.getItem(KP + el.getAttribute('data-item'))) el.classList.add('checked');
+      });
+    } catch(e){}
+    repositionDone();
+  }
+  function updateCounts(){
+    document.querySelectorAll('section[data-name]').forEach(function(sec){
+      var items = sec.querySelectorAll('[data-item]');
+      var done = sec.querySelectorAll('[data-item].checked');
+      var c = sec.querySelector('.count');
+      if(c && items.length) c.textContent = done.length + ' / ' + items.length;
+    });
+    var s = collectState();
+    document.getElementById('pending').textContent = s.done.length ? (s.done.length + ' pending') : 'Nothing pending';
+  }
+  document.querySelectorAll('li.check[data-item]').forEach(function(el){
+    el.addEventListener('click', function(){
+      el.classList.toggle('checked');
+      saveCheck(el); repositionDone(); updateCounts();
+    });
+  });
+  function collectState(){
+    var done=[], open=[];
+    document.querySelectorAll('li.check[data-item]').forEach(function(el){
+      (el.classList.contains('checked') ? done : open).push(el.getAttribute('data-item'));
+    });
+    return {done:done, open:open};
+  }
+  function syncState(){
+    var s = collectState();
+    if(s.done.length===0){
+      document.getElementById('syncflash').textContent='Nothing checked yet.';
+      return;
+    }
+    var body = 'Work sync:\n\nDONE:\n- ' + s.done.join('\n- ') + '\n\nSTILL OPEN:\n- ' + (s.open.length? s.open.join('\n- ') : '(nothing)');
+    var url = 'mailto:rwallock@gmail.com?subject=' + encodeURIComponent('Dump: Work sync') + '&body=' + encodeURIComponent(body);
+    var a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    document.body.appendChild(a); try { a.click(); } catch(e){} document.body.removeChild(a);
+    try { s.done.forEach(function(it){ localStorage.setItem(SP + it, '1'); }); } catch(e){}
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('Dump: Work sync\n\n' + body);
+    document.getElementById('syncflash').textContent = 'If mail didn\'t open: copied — paste to Pigpen. 🐷';
+    setTimeout(repositionDone, 400);
+  }
+  restoreChecks(); updateCounts();
+</script>
+</body>
+</html>
