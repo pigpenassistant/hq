@@ -122,7 +122,7 @@
   </div>
 </section>
 
-<footer>Pigpen Work v2 · McGraw Hill only — freelance lives on HQ — checks stick on this device, Sync tells Pigpen</footer>
+<footer>Pigpen Work v3-gmail · McGraw Hill only — freelance lives on HQ — checks stick on this device, Sync tells Pigpen</footer>
 
 <div id="syncbar">
   <span id="pending">Nothing pending</span>
@@ -185,10 +185,15 @@
       return;
     }
     var body = 'Work sync:\n\nDONE:\n- ' + s.done.join('\n- ') + '\n\nSTILL OPEN:\n- ' + (s.open.length? s.open.join('\n- ') : '(nothing)');
-    var url = 'mailto:rwallock@gmail.com?subject=' + encodeURIComponent('Dump: Work sync') + '&body=' + encodeURIComponent(body);
-    var a = document.createElement('a');
-    a.href = url; a.target = '_blank'; a.rel = 'noopener';
-    document.body.appendChild(a); try { a.click(); } catch(e){} document.body.removeChild(a);
+    var gurl = 'https://mail.google.com/mail/?view=cm&fs=1&to=rwallock@gmail.com&su=' + encodeURIComponent('Dump: Work sync') + '&body=' + encodeURIComponent(body);
+    var w = null;
+    try { w = window.open(gurl, '_blank'); } catch(e) {}
+    if (!w) {
+      var a = document.createElement('a');
+      a.href = 'mailto:rwallock@gmail.com?subject=' + encodeURIComponent('Dump: Work sync') + '&body=' + encodeURIComponent(body);
+      a.target = '_blank'; a.rel = 'noopener';
+      document.body.appendChild(a); try { a.click(); } catch(e){} document.body.removeChild(a);
+    }
     try { s.done.forEach(function(it){ localStorage.setItem(SP + it, '1'); }); } catch(e){}
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('Dump: Work sync\n\n' + body);
     document.getElementById('syncflash').textContent = 'If mail didn\'t open: copied — paste to Pigpen. 🐷';

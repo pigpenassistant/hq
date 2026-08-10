@@ -229,7 +229,7 @@
   </div>
 </section>
 
-<footer>Pigpen v7 · checks stick on this device — Sync tells Pigpen so the list itself updates</footer>
+<footer>Pigpen v7-gmail · checks stick on this device — Sync tells Pigpen so the list itself updates</footer>
 
 <div id="syncbar">
   <span id="pending">Nothing pending</span>
@@ -317,20 +317,25 @@
   }
 
   function openMail(subject, bodyText, flashId){
-    var url = 'mailto:rwallock@gmail.com?subject=' + encodeURIComponent(subject) +
-              '&body=' + encodeURIComponent(bodyText);
     var flash = document.getElementById(flashId);
-    var a = document.createElement('a');
-    a.href = url; a.target = '_blank'; a.rel = 'noopener';
-    document.body.appendChild(a);
-    try { a.click(); } catch(e) {}
-    document.body.removeChild(a);
     var full = subject + '\n\n' + bodyText;
+    var gurl = 'https://mail.google.com/mail/?view=cm&fs=1&to=rwallock@gmail.com' +
+               '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyText);
+    var w = null;
+    try { w = window.open(gurl, '_blank'); } catch(e) {}
+    if (!w) {
+      var a = document.createElement('a');
+      a.href = 'mailto:rwallock@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyText);
+      a.target = '_blank'; a.rel = 'noopener';
+      document.body.appendChild(a);
+      try { a.click(); } catch(e) {}
+      document.body.removeChild(a);
+    }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(full).then(function(){
-        flash.textContent = 'If mail didn\'t open: copied — paste into an email to yourself or into Pigpen chat. 🐷';
+        flash.textContent = w ? 'Gmail should be opening - hit send there. (Also copied, just in case.)' : 'If nothing opened: copied - paste into an email or into Pigpen chat.';
       }).catch(function(){ showManual(flash, full); });
-    } else showManual(flash, full);
+    } else if (!w) showManual(flash, full);
   }
   function showManual(flash, full){
     var box = document.getElementById('manualbox');
