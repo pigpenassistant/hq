@@ -375,8 +375,8 @@
   }
 
   function shareDay(){
-    var text = 'Mon 8/10: LAST camp week starts, 8:00–4:30 — Wheels & Water day: bike/scooter + HELMET, swimsuit, towel, nut-free lunch, water bottle. Randy is on Zoom 4:00–8:00 (four sessions) — 4:30 camp pickup needs a name. Sat: Adelaide\\'s party 10:30 + Nate\\'s 50th 2:00.\n' +
-      '— sent from Pigpen HQ 🐷';
+    var text = "Mon 8/10: LAST camp week starts, 8:00-4:30 - Wheels & Water day: bike/scooter + HELMET, swimsuit, towel, nut-free lunch, water bottle. Randy is on Zoom 4:00-8:00 (four sessions) - 4:30 camp pickup needs a name. Sat: Adelaide's party 10:30 + Nate's 50th 2:00.\n" +
+      "- sent from Pigpen HQ";
     if (navigator.share) {
       navigator.share({text: text}).catch(function(){});
     } else if (navigator.clipboard && navigator.clipboard.writeText) {
