@@ -96,9 +96,10 @@
     <textarea id="dumpbox" placeholder="Type, tap 🎤 Record, or use the keyboard mic — then Send."></textarea>
     <div class="btnrow">
       <button class="btn rec" id="recbtn" onclick="toggleRec()">🎤 Record</button>
-      <button class="btn" onclick="sendDump()">Send to Pigpen 🐷</button>
+      <a class="btn" id="sendlink" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=rwallock@gmail.com" target="_blank" rel="noopener" onclick="return afterSend()" style="text-decoration:none; line-height:1.4">Send to Pigpen 🐷</a>
     </div>
     <div class="flash" id="dumpflash"></div>
+    <div style="text-align:center; margin-top:2px"><span onclick="copyDump()" style="font-size:12.5px; color:var(--accent); cursor:pointer; text-decoration:underline">or just copy it</span></div>
   </div>
 </section>
 
@@ -256,16 +257,80 @@
   </div>
 </section>
 
-<footer>Pigpen v7-gmail · checks stick on this device — Sync tells Pigpen so the list itself updates</footer>
+<footer>Pigpen v8-reallink · checks stick on this device — Sync tells Pigpen so the list itself updates</footer>
 
 <div id="syncbar">
   <span id="pending">Nothing pending</span>
-  <button class="btn" onclick="syncState()">📤 Sync to Pigpen</button>
+  <a class="btn" id="synclink" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=rwallock@gmail.com" target="_blank" rel="noopener" onclick="return afterSync()" style="text-decoration:none; line-height:1.4">📤 Sync to Pigpen</a>
 </div>
 <div class="flash" id="syncflash" style="position:fixed; bottom:70px; left:0; right:0; pointer-events:none"></div>
 
 <script>
   function toggle(h2){ h2.parentElement.classList.toggle('folded'); }
+
+  // ---- REAL-LINK SEND (iOS home-screen apps block scripted popups; a genuine
+  //      tap on a real <a> always works, so hrefs are kept current as you type) ----
+  function gmailUrl(subject, body){
+    return 'https://mail.google.com/mail/?view=cm&fs=1&to=rwallock@gmail.com' +
+           '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+  function updateSendLink(){
+    var box = document.getElementById('dumpbox');
+    var link = document.getElementById('sendlink');
+    if (!box || !link) return;
+    var t = box.value.trim();
+    link.href = gmailUrl('Dump: ' + (t ? t.slice(0,60) : 'note'), t);
+  }
+  function afterSend(){
+    var box = document.getElementById('dumpbox');
+    var t = box ? box.value.trim() : '';
+    if (!t){
+      document.getElementById('dumpflash').textContent = 'Type or record something first.';
+      return false;
+    }
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t); } catch(e){}
+    setTimeout(function(){
+      if (box) box.value = '';
+      finalText = '';
+      updateSendLink();
+      document.getElementById('dumpflash').textContent = 'Opened in Gmail - hit send there. (Copied too.)';
+    }, 900);
+    return true;
+  }
+  function copyDump(){
+    var box = document.getElementById('dumpbox');
+    var t = box ? box.value.trim() : '';
+    var flash = document.getElementById('dumpflash');
+    if (!t){ flash.textContent = 'Nothing to copy yet.'; return; }
+    try {
+      navigator.clipboard.writeText('Dump: ' + t).then(function(){
+        flash.textContent = 'Copied - paste it into an email to yourself or into Pigpen chat.';
+      });
+    } catch(e){
+      box.focus(); box.select();
+      flash.textContent = 'Long-press the box, Copy, then paste to Pigpen.';
+    }
+  }
+  function updateSyncLink(){
+    var link = document.getElementById('synclink');
+    if (!link) return;
+    var s = collectState();
+    var body = 'HQ sync:\n';
+    if (s.answers.length) body += '\nANSWERS:\n- ' + s.answers.join('\n- ') + '\n';
+    if (s.done.length)    body += '\nDONE:\n- ' + s.done.join('\n- ') + '\n';
+    body += '\nSTILL OPEN:\n- ' + (s.open.length ? s.open.join('\n- ') : '(nothing)');
+    link.href = gmailUrl('Dump: HQ sync', body);
+  }
+  function afterSync(){
+    var s = collectState();
+    if (s.done.length === 0 && s.answers.length === 0){
+      document.getElementById('syncflash').textContent = 'Nothing checked or answered yet.';
+      return false;
+    }
+    try { s.done.forEach(function(it){ localStorage.setItem(SP + it, '1'); }); } catch(e){}
+    setTimeout(repositionDone, 900);
+    return true;
+  }
 
   // ---- checks stick on this device (safe no-op where storage is unavailable) ----
   var KP = 'pigpen-check:';
@@ -310,6 +375,7 @@
     var s = collectState();
     var n = s.done.length + s.answers.length;
     document.getElementById('pending').textContent = n ? (n + ' pending') : 'Nothing pending';
+    updateSyncLink();
   }
 
   document.querySelectorAll('[data-item]').forEach(function(el){
@@ -443,6 +509,7 @@
         else interim += e.results[i][0].transcript;
       }
       document.getElementById('dumpbox').value = (finalText + ' ' + interim).trim();
+      updateSendLink();
       recTimer = setTimeout(stopRec, PAUSE_MS);
     };
     rec.onerror = function(){ stopRec('Mic blocked here — try the home-screen version or the keyboard mic.'); };
@@ -465,12 +532,16 @@
     var btn = document.getElementById('recbtn');
     btn.classList.remove('live');
     btn.textContent = '🎤 Record';
+    updateSendLink();
     document.getElementById('dumpflash').textContent =
       msg || (document.getElementById('dumpbox').value ? 'Got it — review and hit Send. 🐷' : '');
   }
 
+  var _box = document.getElementById('dumpbox');
+  if (_box) _box.addEventListener('input', updateSendLink);
   restoreChecks();
   updateCounts();
+  updateSendLink();
 </script>
 </body>
 </html>

@@ -130,16 +130,37 @@
   </div>
 </section>
 
-<footer>Pigpen Work v3-gmail · McGraw Hill only — freelance lives on HQ — checks stick on this device, Sync tells Pigpen</footer>
+<footer>Pigpen Work v4-reallink · McGraw Hill only — freelance lives on HQ — checks stick on this device, Sync tells Pigpen</footer>
 
 <div id="syncbar">
   <span id="pending">Nothing pending</span>
-  <button class="btn" onclick="syncState()">📤 Sync to Pigpen</button>
+  <a class="btn" id="synclink" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=rwallock@gmail.com" target="_blank" rel="noopener" onclick="return afterSync()" style="text-decoration:none; line-height:1.4">📤 Sync to Pigpen</a>
 </div>
 <div class="flash" id="syncflash" style="position:fixed; bottom:70px; left:0; right:0; pointer-events:none"></div>
 
 <script>
   function toggle(h2){ h2.parentElement.classList.toggle('folded'); }
+
+  // real-link sync (scripted popups are blocked in iOS home-screen apps)
+  function updateSyncLink(){
+    var link = document.getElementById('synclink');
+    if (!link) return;
+    var s = collectState();
+    var body = 'Work sync:\n\nDONE:\n- ' + (s.done.length ? s.done.join('\n- ') : '(nothing)') +
+               '\n\nSTILL OPEN:\n- ' + (s.open.length ? s.open.join('\n- ') : '(nothing)');
+    link.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=rwallock@gmail.com&su=' +
+                encodeURIComponent('Dump: Work sync') + '&body=' + encodeURIComponent(body);
+  }
+  function afterSync(){
+    var s = collectState();
+    if (s.done.length === 0){
+      document.getElementById('syncflash').textContent = 'Nothing checked yet.';
+      return false;
+    }
+    try { s.done.forEach(function(it){ localStorage.setItem(SP + it, '1'); }); } catch(e){}
+    setTimeout(repositionDone, 900);
+    return true;
+  }
   var KP = 'pigpen-check:', SP = 'pigpen-synced:';
   function saveCheck(el){
     try {
@@ -172,6 +193,7 @@
     });
     var s = collectState();
     document.getElementById('pending').textContent = s.done.length ? (s.done.length + ' pending') : 'Nothing pending';
+    updateSyncLink();
   }
   document.querySelectorAll('li.check[data-item]').forEach(function(el){
     el.addEventListener('click', function(){
