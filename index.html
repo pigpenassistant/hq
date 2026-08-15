@@ -99,7 +99,7 @@
       <a class="btn" id="sendlink" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=rwallock@gmail.com" target="_blank" rel="noopener" onclick="return afterSend()" style="text-decoration:none; line-height:1.4">Send to Pigpen 🐷</a>
     </div>
     <div class="flash" id="dumpflash"></div>
-    <div style="text-align:center; margin-top:2px"><span onclick="copyDump()" style="font-size:12.5px; color:var(--accent); cursor:pointer; text-decoration:underline">or just copy it</span></div>
+    <div style="text-align:center; margin-top:2px; font-size:12.5px; color:var(--muted)"><span onclick="copyDump()" style="color:var(--accent); cursor:pointer; text-decoration:underline">just copy it</span> · <a id="weblink" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=rwallock@gmail.com" target="_blank" rel="noopener" style="color:var(--accent)">web Gmail</a></div>
   </div>
 </section>
 
@@ -257,7 +257,7 @@
   </div>
 </section>
 
-<footer>Pigpen v8-reallink · checks stick on this device — Sync tells Pigpen so the list itself updates</footer>
+<footer>Pigpen v9-gmailapp · checks stick on this device — Sync tells Pigpen so the list itself updates</footer>
 
 <div id="syncbar">
   <span id="pending">Nothing pending</span>
@@ -271,8 +271,21 @@
   // ---- REAL-LINK SEND (iOS home-screen apps block scripted popups; a genuine
   //      tap on a real <a> always works, so hrefs are kept current as you type) ----
   function gmailUrl(subject, body){
+    // Gmail's iOS app intercepts https://mail.google.com links and drops the
+    // compose params (you land in the inbox). Its own scheme opens compose directly.
+    return 'googlegmail:///co?to=rwallock@gmail.com' +
+           '&subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+  function gmailWebUrl(subject, body){
     return 'https://mail.google.com/mail/?view=cm&fs=1&to=rwallock@gmail.com' +
            '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+  function updateWebFallback(){
+    var box = document.getElementById('dumpbox');
+    var wl = document.getElementById('weblink');
+    if (!box || !wl) return;
+    var t = box.value.trim();
+    wl.href = gmailWebUrl('Dump: ' + (t ? t.slice(0,60) : 'note'), t);
   }
   function updateSendLink(){
     var box = document.getElementById('dumpbox');
@@ -280,6 +293,7 @@
     if (!box || !link) return;
     var t = box.value.trim();
     link.href = gmailUrl('Dump: ' + (t ? t.slice(0,60) : 'note'), t);
+    updateWebFallback();
   }
   function afterSend(){
     var box = document.getElementById('dumpbox');

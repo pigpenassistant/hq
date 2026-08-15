@@ -130,7 +130,7 @@
   </div>
 </section>
 
-<footer>Pigpen Work v4-reallink · McGraw Hill only — freelance lives on HQ — checks stick on this device, Sync tells Pigpen</footer>
+<footer>Pigpen Work v5-gmailapp · McGraw Hill only — freelance lives on HQ — checks stick on this device, Sync tells Pigpen</footer>
 
 <div id="syncbar">
   <span id="pending">Nothing pending</span>
@@ -148,7 +148,7 @@
     var s = collectState();
     var body = 'Work sync:\n\nDONE:\n- ' + (s.done.length ? s.done.join('\n- ') : '(nothing)') +
                '\n\nSTILL OPEN:\n- ' + (s.open.length ? s.open.join('\n- ') : '(nothing)');
-    link.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=rwallock@gmail.com&su=' +
+    link.href = 'googlegmail:///co?to=rwallock@gmail.com&subject=' +
                 encodeURIComponent('Dump: Work sync') + '&body=' + encodeURIComponent(body);
   }
   function afterSync(){
