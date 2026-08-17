@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <title>Pigpen Work</title>
-<meta name="apple-mobile-web-app-title" content="Pigpen Work">
+<meta name="apple-mobile-web-app-title" content="Work">
 <style>
   :root{
     --bg:#f6f4ef; --card:#ffffff; --ink:#26241f; --muted:#7a766c;
@@ -85,83 +85,143 @@
   <h1>🐷💼 Pigpen Work</h1>
   <div class="hbtns">
     <a href="index.html" class="share" style="text-decoration:none">🏠 HQ</a>
-    <span class="stamp">Mon 8/17 · 9:15 stand-up</span>
+    <span class="stamp">Mon 8/17 · new layout</span>
   </div>
 </header>
 
-<p class="diff"><b>Mon 9:15 stand-up:</b> nothing new came up via this inbox since Friday — the board carries. This is a <b>4-day MH week</b> (camping Fri–Sun), so the drumbeats: <b>Wed's Roche + Case Study outcomes — 5 days unreported, capture is overdue since Friday</b> · <b>WorldMed revive-or-close due Wednesday</b> · <b>Kelsey may be waiting on you</b> (two weeks today) · flyer runway keeps shrinking. Einstein run #1 kicks off once the flyer crunch clears. Open Asana and report back — the 10:00 pass folds it in.</p>
+<section id="dumpsec">
+  <h2 onclick="toggle(this)">🎙 Work dump <span class="chev">▼</span></h2>
+  <div class="body">
+    <textarea id="dumpbox" placeholder="Talk or type — meeting notes, a new ask, an idea. Tap 🎤 Record, then Send."></textarea>
+    <div class="btnrow">
+      <button class="btn rec" id="recbtn" onclick="toggleRec()">🎤 Record</button>
+      <a class="btn" id="sendlink" href="#" target="_blank" rel="noopener" onclick="return afterSend()" style="text-decoration:none; line-height:1.4">Send to Pigpen 🐷</a>
+    </div>
+    <div class="flash" id="dumpflash"></div>
+    <div style="text-align:center; margin-top:2px; font-size:12.5px; color:var(--muted)"><span onclick="copyDump()" style="color:var(--accent); cursor:pointer; text-decoration:underline">just copy it</span> · <a id="weblink" href="#" target="_blank" rel="noopener" style="color:var(--accent)">web Gmail</a></div>
+  </div>
+</section>
 
-<section data-name="Today">
-  <h2 onclick="toggle(this)">🎯 Today's order <span class="count"></span><span class="chev">▼</span></h2>
+<section>
+  <h2 onclick="toggle(this)">🗓 Last two weeks — the shape of things <span class="chev">▼</span></h2>
   <div class="body">
   <ul>
-    <li class="check" data-item="MH: Wed Roche session + Case Study Review — capture outcomes + action items"><span class="box">✓</span><div class="txt"><span class="big">1. Last Wednesday's Roche session + Case Study Review</span> — capture the outcomes<span class="sub">Overdue — your own Friday deadline · 5 days unreported · 15 minutes: tell Pigpen or feed the transcripts</span></div></li>
-    <li class="check" data-item="MH: Case Files — Kelsey task — verify + close"><span class="box">✓</span><div class="txt"><span class="big">2. Case Files — Kelsey task</span> — verify + close<span class="sub">Unverified since 8/3 — TWO weeks today, and she may be waiting on you. Quick check, big unblock.</span></div></li>
-    <li class="check" data-item="MH: Spot Translation flyer — real block today"><span class="box">✓</span><div class="txt"><span class="big">3. Spot Translation flyer</span> — a real drafting block, morning while fresh<span class="sub">Biggest item on the board · minus camping, about 9 working days of runway left</span></div></li>
-    <li class="check" data-item="MH: WorldMed — revive or close (due ~8/20)"><span class="box">✓</span><div class="txt"><span class="big">4. WorldMed</span> — revive-or-close decision<span class="sub">Your own deadline is Wednesday · a stale maybe costs attention every week</span></div></li>
-    <li class="check" data-item="MH: Seismic/Markham re-ping + Spark outline"><span class="box">✓</span><div class="txt"><span class="big">5. Ten-minute closers</span> — Seismic (Markham) re-ping · Spark post outline<span class="sub">Both end multi-week staleness with two lines each</span></div></li>
+    <li><span class="dot a"></span><div><b>Wed 8/12 — Roche working session + Case Study Review</b><span class="sub">Both landed at 1:00. Outcomes never reported — the single biggest hole in this board.</span></div></li>
+    <li><span class="dot b"></span><div><b>Spot Translation</b> — video script finished; flyer in drafting, adapted from the mobile-app template<span class="sub">Sept 1 release is the fixed point everything else bends around</span></div></li>
+    <li><span class="dot b"></span><div><b>AccessMedicine internal site</b> — building from the templated outline, Clinical Reasoning site as the structural model</div></li>
+    <li><span class="dot b"></span><div><b>Case Files</b> — Collection flyer copy drafted and cross-checked; the Kelsey task has sat unverified since 8/3</div></li>
+    <li><span class="dot g"></span><div><b>Renewal docs</b> — out with product editors for new-content / edition / platform review</div></li>
+    <li><span class="dot a"></span><div><b>Quiet corners:</b> Seismic (Markham) close-out unconfirmed ~3 weeks · WorldMed silent ~3 weeks · Spark post never started · Einstein stakeholder run still on deck</div></li>
+    <li><span class="dot g"></span><div class="sub">This section fills from what you send me — forwarded email, a work dump, or a meeting transcript. Anything you don't send, I can't see.</div></li>
+  </ul>
+  </div>
+</section>
+
+<section data-name="Urgent">
+  <h2 onclick="toggle(this)">🔴 Urgent <span class="count"></span><span class="chev">▼</span></h2>
+  <div class="body">
+  <ul>
+    <li class="check" data-item="Capture Roche + Case Study outcomes"><span class="box">✓</span><div class="txt"><span class="big">Roche + Case Study Review — capture the outcomes</span><span class="sub">OVERDUE against your own Friday deadline · 5 days unreported · ~15 min: talk it into the dump box above and it lands everywhere</span></div></li>
+    <li class="check" data-item="Case Files — Kelsey task verify + close"><span class="box">✓</span><div class="txt"><span class="big">Case Files — Kelsey task</span> · verify and close<span class="sub">Two weeks stale as of today — and she may be waiting on you</span></div></li>
+    <li class="check" data-item="WorldMed revive-or-close decision"><span class="box">✓</span><div class="txt"><span class="big">WorldMed — revive or close</span><span class="sub">Your own deadline is ~Wed 8/20 · a stale maybe taxes every week it survives</span></div></li>
+    <li class="check" data-item="Seismic (Markham) close-out re-ping"><span class="box">✓</span><div class="txt"><span class="big">Seismic (Markham) — re-ping the close-out</span><span class="sub">One confirmation from done for ~3 weeks · a 10-minute move</span></div></li>
+  </ul>
+  </div>
+</section>
+
+<section data-name="ThisWeek">
+  <h2 onclick="toggle(this)">📅 This week <span class="count"></span><span class="chev">▼</span></h2>
+  <div class="body">
+  <div class="day">Four working days — you are camping Fri–Sun</div>
+  <ul>
+    <li class="check" data-item="Spot Translation flyer — drafting block"><span class="box">✓</span><div class="txt"><span class="big">Spot Translation flyer</span> — a real drafting block, not a nibble<span class="sub">~9 working days to the Sept 1 release once camping is subtracted</span></div></li>
+    <li class="check" data-item="AccessMedicine internal site — next build block"><span class="box">✓</span><div class="txt"><span class="big">AccessMedicine internal site</span> — next build block<span class="sub">Biggest build in flight; wants deep-work time, not scraps</span></div></li>
+    <li class="check" data-item="Einstein stakeholder run #1 — kick off"><span class="box">✓</span><div class="txt"><span class="big">Einstein stakeholder run #1</span> — kick off<span class="sub">Slated for this week · table + intro drafts, drafts only, librarians included</span></div></li>
+    <li class="check" data-item="Spark post — outline"><span class="box">✓</span><div class="txt"><span class="big">Spark post</span> — break the seal with an outline<span class="sub">Oldest not-started item on the board</span></div></li>
+  </ul>
+  </div>
+</section>
+
+<section data-name="NoDate">
+  <h2 onclick="toggle(this)">🗂 No date yet <span class="count"></span><span class="chev">▼</span></h2>
+  <div class="body">
+  <ul>
+    <li class="check" data-item="Case Files Collection flyer — final pass"><span class="box">✓</span><div class="txt">Case Files Collection flyer — final pass<span class="sub">Copy drafted and cross-checked; waiting on a decision to call it done</span></div></li>
+    <li class="check" data-item="Renewal docs — consolidate when editors return them"><span class="box">✓</span><div class="txt">Renewal docs — consolidate when the editors come back<span class="sub">Chase the stragglers; first cycle on these sheets</span></div></li>
+    <li class="check" data-item="AI positioning / tagline narrative"><span class="box">✓</span><div class="txt">AI positioning + tagline work<span class="sub">Currently product-by-product; wants to become one story</span></div></li>
+    <li class="check" data-item="Compass segment positioning"><span class="box">✓</span><div class="txt">Compass segment positioning<span class="sub">Audience-specific angles per med-school segment</span></div></li>
   </ul>
   </div>
 </section>
 
 <section>
-  <h2 onclick="toggle(this)">🗂 The board <span class="chev">▼</span></h2>
+  <h2 onclick="toggle(this)">💡 Big picture <span class="chev">▼</span></h2>
   <div class="body">
-  <div class="day">🆕 Came up (since yesterday)</div>
   <ul>
-    <li><span class="dot g"></span><div class="sub">Nothing new via this inbox Fri → Mon 9:15 — MH mail lives in the work account, so Asana + Teams are your eyes: report back and it lands on the board.</div></li>
-  </ul>
-  <div class="day">📋 Known, not started</div>
-  <ul>
-    <li><span class="dot a"></span><div>Spark post — oldest not-started (an outline breaks the seal)<span class="sub">Einstein stakeholder run #1 — on deck this week (Pigpen drafts, drafts only) — kicks off when the flyer crunch clears</span></div></li>
-  </ul>
-  <div class="day">🔄 In motion</div>
-  <ul>
-    <li><span class="dot b"></span><div>Spot Translation — flyer drafting · AccessMedicine internal site — building · Case Files Collection flyer — final pass<span class="sub">Wed's Roche session + Case Study Review — outcomes 5 days unreported, capture is #1 today</span></div></li>
-  </ul>
-  <div class="day">🏁 Near done / verify-away</div>
-  <ul>
-    <li><span class="dot g"></span><div>Seismic (Markham) close-out · Case Files Kelsey task — both one confirmation from closed</div></li>
-  </ul>
-  <div class="day">⏳ Waiting on them</div>
-  <ul>
-    <li><span class="dot a"></span><div class="sub">Renewal docs — with product editors (chase stragglers) · WorldMed — no movement (your decision due Wed ⚠) · Asana connection — employer OK pending</div></li>
+    <li><span class="dot b"></span><div><b>One AI narrative, not three</b><span class="sub">AI Reader, Spot Translator, Clinical Reasoning told as a single AI-enhanced story for MH Medical — a position you own rather than copy you produce</span></div></li>
+    <li><span class="dot b"></span><div><b>The internal-site house pattern</b><span class="sub">Clinical Reasoning → AccessMedicine → a repeatable template (hero / What&#39;s New / story / What to Know / What to Say) for every product</span></div></li>
+    <li><span class="dot b"></span><div><b>Prospecting as a standing pipeline</b><span class="sub">Einstein is the pilot; one university at a time becomes an always-on motion across the Access suite</span></div></li>
+    <li><span class="dot b"></span><div><b>The work engine itself</b><span class="sub">Asana reading itself once approved · meeting transcripts auto-debriefing into this board · this page as the only place you look</span></div></li>
+    <li><span class="dot g"></span><div class="sub">Ideas you dump land here automatically — say &quot;big idea&quot; anywhere in a work dump.</div></li>
   </ul>
   </div>
 </section>
 
-<footer>Pigpen Work v5-gmailapp · McGraw Hill only — freelance lives on HQ — checks stick on this device, Sync tells Pigpen</footer>
+<footer>Pigpen Work v6 · McGraw Hill only · updates when you feed it — checks stick on this device, Sync tells Pigpen</footer>
 
 <div id="syncbar">
   <span id="pending">Nothing pending</span>
-  <a class="btn" id="synclink" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=rwallock@gmail.com" target="_blank" rel="noopener" onclick="return afterSync()" style="text-decoration:none; line-height:1.4">📤 Sync to Pigpen</a>
+  <a class="btn" id="synclink" href="#" target="_blank" rel="noopener" onclick="return afterSync()" style="text-decoration:none; line-height:1.4">📤 Sync to Pigpen</a>
 </div>
 <div class="flash" id="syncflash" style="position:fixed; bottom:70px; left:0; right:0; pointer-events:none"></div>
 
 <script>
   function toggle(h2){ h2.parentElement.classList.toggle('folded'); }
+  var KP = 'pigpenwork-check:', SP = 'pigpenwork-synced:';
 
-  // real-link sync (scripted popups are blocked in iOS home-screen apps)
-  function updateSyncLink(){
-    var link = document.getElementById('synclink');
-    if (!link) return;
-    var s = collectState();
-    var body = 'Work sync:\n\nDONE:\n- ' + (s.done.length ? s.done.join('\n- ') : '(nothing)') +
-               '\n\nSTILL OPEN:\n- ' + (s.open.length ? s.open.join('\n- ') : '(nothing)');
-    link.href = 'googlegmail:///co?to=rwallock@gmail.com&subject=' +
-                encodeURIComponent('Dump: Work sync') + '&body=' + encodeURIComponent(body);
+  function gmailUrl(subject, body){
+    return 'googlegmail:///co?to=rwallock@gmail.com' +
+           '&subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   }
-  function afterSync(){
-    var s = collectState();
-    if (s.done.length === 0){
-      document.getElementById('syncflash').textContent = 'Nothing checked yet.';
-      return false;
-    }
-    try { s.done.forEach(function(it){ localStorage.setItem(SP + it, '1'); }); } catch(e){}
-    setTimeout(repositionDone, 900);
+  function gmailWebUrl(subject, body){
+    return 'https://mail.google.com/mail/?view=cm&fs=1&to=rwallock@gmail.com' +
+           '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+  function updateSendLink(){
+    var box = document.getElementById('dumpbox');
+    var link = document.getElementById('sendlink');
+    var wl = document.getElementById('weblink');
+    if (!box || !link) return;
+    var t = box.value.trim();
+    var subj = 'Dump: work - ' + (t ? t.slice(0,50) : 'note');
+    link.href = gmailUrl(subj, t);
+    if (wl) wl.href = gmailWebUrl(subj, t);
+  }
+  function afterSend(){
+    var box = document.getElementById('dumpbox');
+    var t = box ? box.value.trim() : '';
+    if (!t){ document.getElementById('dumpflash').textContent = 'Say or type something first.'; return false; }
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t); } catch(e){}
+    setTimeout(function(){
+      if (box) box.value = '';
+      finalText = '';
+      updateSendLink();
+      document.getElementById('dumpflash').textContent = 'Opened in Gmail - hit send there. (Copied too.)';
+    }, 900);
     return true;
   }
-  var KP = 'pigpen-check:', SP = 'pigpen-synced:';
+  function copyDump(){
+    var box = document.getElementById('dumpbox');
+    var t = box ? box.value.trim() : '';
+    var flash = document.getElementById('dumpflash');
+    if (!t){ flash.textContent = 'Nothing to copy yet.'; return; }
+    try {
+      navigator.clipboard.writeText('Dump: work - ' + t).then(function(){
+        flash.textContent = 'Copied - paste it anywhere.';
+      });
+    } catch(e){ box.focus(); box.select(); flash.textContent = 'Long-press the box and Copy.'; }
+  }
+
   function saveCheck(el){
     try {
       var k = KP + el.getAttribute('data-item');
@@ -184,23 +244,6 @@
     } catch(e){}
     repositionDone();
   }
-  function updateCounts(){
-    document.querySelectorAll('section[data-name]').forEach(function(sec){
-      var items = sec.querySelectorAll('[data-item]');
-      var done = sec.querySelectorAll('[data-item].checked');
-      var c = sec.querySelector('.count');
-      if(c && items.length) c.textContent = done.length + ' / ' + items.length;
-    });
-    var s = collectState();
-    document.getElementById('pending').textContent = s.done.length ? (s.done.length + ' pending') : 'Nothing pending';
-    updateSyncLink();
-  }
-  document.querySelectorAll('li.check[data-item]').forEach(function(el){
-    el.addEventListener('click', function(){
-      el.classList.toggle('checked');
-      saveCheck(el); repositionDone(); updateCounts();
-    });
-  });
   function collectState(){
     var done=[], open=[];
     document.querySelectorAll('li.check[data-item]').forEach(function(el){
@@ -208,28 +251,84 @@
     });
     return {done:done, open:open};
   }
-  function syncState(){
+  function updateCounts(){
+    document.querySelectorAll('section[data-name]').forEach(function(sec){
+      var items = sec.querySelectorAll('[data-item]');
+      var done = sec.querySelectorAll('[data-item].checked');
+      var c = sec.querySelector('.count');
+      if (c && items.length) c.textContent = done.length + ' / ' + items.length;
+    });
     var s = collectState();
-    if(s.done.length===0){
-      document.getElementById('syncflash').textContent='Nothing checked yet.';
-      return;
-    }
-    var body = 'Work sync:\n\nDONE:\n- ' + s.done.join('\n- ') + '\n\nSTILL OPEN:\n- ' + (s.open.length? s.open.join('\n- ') : '(nothing)');
-    var gurl = 'https://mail.google.com/mail/?view=cm&fs=1&to=rwallock@gmail.com&su=' + encodeURIComponent('Dump: Work sync') + '&body=' + encodeURIComponent(body);
-    var w = null;
-    try { w = window.open(gurl, '_blank'); } catch(e) {}
-    if (!w) {
-      var a = document.createElement('a');
-      a.href = 'mailto:rwallock@gmail.com?subject=' + encodeURIComponent('Dump: Work sync') + '&body=' + encodeURIComponent(body);
-      a.target = '_blank'; a.rel = 'noopener';
-      document.body.appendChild(a); try { a.click(); } catch(e){} document.body.removeChild(a);
-    }
-    try { s.done.forEach(function(it){ localStorage.setItem(SP + it, '1'); }); } catch(e){}
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('Dump: Work sync\n\n' + body);
-    document.getElementById('syncflash').textContent = 'If mail didn\'t open: copied — paste to Pigpen. 🐷';
-    setTimeout(repositionDone, 400);
+    document.getElementById('pending').textContent = s.done.length ? (s.done.length + ' pending') : 'Nothing pending';
+    updateSyncLink();
   }
-  restoreChecks(); updateCounts();
+  function updateSyncLink(){
+    var link = document.getElementById('synclink');
+    if (!link) return;
+    var s = collectState();
+    var body = 'Work sync:\n\nDONE:\n- ' + (s.done.length ? s.done.join('\n- ') : '(nothing)') +
+               '\n\nSTILL OPEN:\n- ' + (s.open.length ? s.open.join('\n- ') : '(nothing)');
+    link.href = gmailUrl('Dump: Work sync', body);
+  }
+  function afterSync(){
+    var s = collectState();
+    if (s.done.length === 0){ document.getElementById('syncflash').textContent = 'Nothing checked yet.'; return false; }
+    try { s.done.forEach(function(it){ localStorage.setItem(SP + it, '1'); }); } catch(e){}
+    setTimeout(repositionDone, 900);
+    return true;
+  }
+  document.querySelectorAll('li.check[data-item]').forEach(function(el){
+    el.addEventListener('click', function(){
+      el.classList.toggle('checked');
+      saveCheck(el); repositionDone(); updateCounts();
+    });
+  });
+
+  // ---- voice capture ----
+  var rec = null, recTimer = null, recActive = false, finalText = '';
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var PAUSE_MS = 3500;
+  function toggleRec(){
+    var btn = document.getElementById('recbtn');
+    var flash = document.getElementById('dumpflash');
+    if (recActive) { stopRec(); return; }
+    if (!SR) { flash.textContent = 'Voice capture is not available in this view - use the mic key on your keyboard.'; return; }
+    rec = new SR();
+    rec.continuous = true; rec.interimResults = true; rec.lang = 'en-US';
+    finalText = document.getElementById('dumpbox').value;
+    rec.onresult = function(e){
+      clearTimeout(recTimer);
+      var interim = '';
+      for (var i = e.resultIndex; i < e.results.length; i++){
+        if (e.results[i].isFinal) finalText = (finalText + ' ' + e.results[i][0].transcript).trim();
+        else interim += e.results[i][0].transcript;
+      }
+      document.getElementById('dumpbox').value = (finalText + ' ' + interim).trim();
+      updateSendLink();
+      recTimer = setTimeout(stopRec, PAUSE_MS);
+    };
+    rec.onerror = function(){ stopRec('Mic blocked here - try the keyboard mic key.'); };
+    rec.onend = function(){ if (recActive) stopRec(); };
+    try {
+      rec.start(); recActive = true;
+      btn.classList.add('live'); btn.textContent = '● Listening…';
+      flash.textContent = 'Talk away - I stop after a long pause.';
+      recTimer = setTimeout(stopRec, 8000);
+    } catch(e){ flash.textContent = 'Could not start the mic - use the keyboard mic key.'; }
+  }
+  function stopRec(msg){
+    recActive = false; clearTimeout(recTimer);
+    if (rec) { try { rec.stop(); } catch(e){} rec = null; }
+    var btn = document.getElementById('recbtn');
+    btn.classList.remove('live'); btn.textContent = '🎤 Record';
+    updateSendLink();
+    document.getElementById('dumpflash').textContent =
+      msg || (document.getElementById('dumpbox').value ? 'Got it - review and hit Send. 🐷' : '');
+  }
+
+  var _b = document.getElementById('dumpbox');
+  if (_b) _b.addEventListener('input', updateSendLink);
+  restoreChecks(); updateCounts(); updateSendLink();
 </script>
 </body>
 </html>
